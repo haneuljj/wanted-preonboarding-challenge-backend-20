@@ -42,7 +42,7 @@ public class Products {
     private String reserveState;
 
     @OneToOne(mappedBy = "products")
-    private Orders order;
+    private Orders orders;
 
     @ManyToOne
     @JoinColumn(name = "member_id") 

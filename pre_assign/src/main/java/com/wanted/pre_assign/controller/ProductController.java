@@ -1,7 +1,10 @@
 package com.wanted.pre_assign.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -62,9 +65,49 @@ public class ProductController {
     }
 
     // 제품 구매 - 판매자가 판매승인 버튼을 눌러 판매 완료하기
-    
+    @GetMapping("/completePurchase")
+    public ResponseEntity<ProductDTO> completePurchase(
+        @RequestParam(name = "productId") Long productId
+    ) {
+        ProductDTO productResponse = productService.completePurchase(productId);
+
+        return ResponseEntity.ok(productResponse);
+    }
 
     // 구매한 제품 목록 조회
+    @GetMapping("/getProductsIBought")
+    public ResponseEntity<List<ProductDTO>> getProductsIBought(
+        @RequestParam(name = "memberId") Long memberId
+    ) {
+        List<ProductDTO> boughtListResponse = productService.getProductsIBought(memberId);
+
+        return ResponseEntity.ok(boughtListResponse);
+    }
 
     // 예약중인 제품 목록 조회
+    @GetMapping("/getReservedProduct")
+    public ResponseEntity<List<ProductDTO>> getReservedProduct(
+        @RequestParam(name = "memberId") Long memberId
+    ) {
+        List<ProductDTO> boughtListResponse = productService.getReservedProduct(memberId);
+
+        return ResponseEntity.ok(boughtListResponse);
+    }
+
+
+    // 구매자, 판매자의 제품 상세 조회 (거래 내역 포함)
+    // 제품 상세 조회
+    @GetMapping("/orderDetail")
+    public ResponseEntity<Map<String, Object>> getOrderDetail(
+        @RequestParam(name = "productId") Long productId
+    ) {
+        ProductDTO productResponse = productService.getProductDetail(productId);
+        OrderDTO orderResponse = productService.getOrderDetail(productId);
+
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("product", productResponse);
+        responseData.put("order", orderResponse);
+
+        return ResponseEntity.ok(responseData);
+    }
 }
